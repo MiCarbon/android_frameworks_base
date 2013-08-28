@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2007, The Android Open Source Project
+** Copyright 2012, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -17,12 +17,7 @@
 */
 -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:detachWallpaper="true" android:shareInterpolator="false">
-    <alpha
-        android:fromAlpha="0.0" android:toAlpha="1.0"
-        android:fillEnabled="true" android:fillBefore="true"
-        android:interpolator="@interpolator/decelerate_quad"
-        android:startOffset="@android:integer/config_shortAnimTime"
-        android:duration="@android:integer/config_shortAnimTime"/>
+<set android:shareInterpolator="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <alpha android:duration="1" android:fromAlpha="0.0" android:toAlpha="0.0" />
 </set>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/* Copyright 20012, The Android Open Source Project
+/*
+** Copyright 2012, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -16,8 +17,7 @@
 */
 -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-    <alpha android:fromAlpha="0.0" android:toAlpha="1.0"
-            android:duration="500"
-            android:interpolator="@interpolator/decelerate_quad" />
+<set
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <alpha android:interpolator="@interpolator/decelerate_quad" android:duration="500" android:fromAlpha="0.0" android:toAlpha="1.0" />
 </set>

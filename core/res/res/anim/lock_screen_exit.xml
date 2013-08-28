@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
-** Copyright 2007, The Android Open Source Project
+** Copyright 2012, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -17,20 +17,8 @@
 */
 -->
 
-
-<set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:zAdjustment="top"
-    android:shareInterpolator="false">
-    <scale
-        android:fromXScale="1.0" android:toXScale="1.10"
-        android:fromYScale="1.0" android:toYScale="1.10"
-        android:pivotX="50%p" android:pivotY="50%p"
-        android:fillEnabled="true" android:fillAfter="true"
-        android:interpolator="@interpolator/accelerate_quint"
-        android:duration="@android:integer/config_shortAnimTime" />
-    <alpha
-        android:fromAlpha="1.0" android:toAlpha="0"
-        android:fillEnabled="true" android:fillAfter="true"
-        android:interpolator="@interpolator/accelerate_quad"
-        android:duration="@android:integer/config_shortAnimTime"/>
+<set android:interpolator="@anim/accelerate_interpolator"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <scale android:interpolator="@anim/linear_interpolator" android:duration="200" android:fromXScale="1.0" android:toXScale="0.0" android:fromYScale="1.0" android:toYScale="1.0" />
+    <translate android:duration="200" android:fromXDelta="0.0" android:toXDelta="50.0%" />
 </set>

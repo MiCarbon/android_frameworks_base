@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/* //device/apps/common/res/anim/slide_out_left.xml
-**
-** Copyright 2007, The Android Open Source Project
+/*
+** Copyright 2012, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -18,9 +17,9 @@
 */
 -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-	<translate android:fromXDelta="0" android:toXDelta="25%"
-            android:duration="@android:integer/config_shortAnimTime"/>
-	<alpha android:fromAlpha="1.0" android:toAlpha="0.0"
-            android:duration="@android:integer/config_shortAnimTime" />
+<set
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate android:duration="@integer/config_shortAnimTime" android:fromXDelta="0.0" android:toXDelta="25.0%" />
+    <alpha android:duration="@integer/config_shortAnimTime" android:fromAlpha="1.0" android:toAlpha="0.0" />
+    <scale android:duration="@integer/config_shortAnimTime" android:pivotX="50.0%" android:pivotY="100.0%" android:fromXScale="1.5" android:toXScale="1.0" android:fromYScale="1.0" android:toYScale="1.5" />
 </set>
