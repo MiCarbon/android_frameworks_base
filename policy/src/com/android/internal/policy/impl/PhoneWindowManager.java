@@ -431,6 +431,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean mLastFocusNeedsMenu = false;
 
     FakeWindow mHideNavFakeWindow = null;
+	
+	static long lastMenuTime = 0;
+    static long lastHomeTime = 0;
+    static long lastBackTime = 0;
 
     static final Rect mTmpParentFrame = new Rect();
     static final Rect mTmpDisplayFrame = new Rect();
@@ -2516,6 +2520,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean longPress = (flags & KeyEvent.FLAG_LONG_PRESS) != 0;
         final boolean virtualKey = event.getDeviceId() == KeyCharacterMap.VIRTUAL_KEYBOARD;
 
+		Log.d(TAG, "lastMenuTime = " + lastMenuTime + " lastHomeTime = " + lastHomeTime + " lastBackTime = " + lastBackTime);
         if (DEBUG_INPUT) {
             Log.d(TAG, "interceptKeyTi keyCode=" + keyCode + " down=" + down + " repeatCount="
                     + repeatCount + " keyguardOn=" + keyguardOn + " mHomePressed=" + mHomePressed
@@ -2564,6 +2569,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // it handle it, because that gives us the correct 5 second
         // timeout.
         if (keyCode == KeyEvent.KEYCODE_HOME) {
+		    lastHomeTime = System.currentTimeMillis();
 
             // If we have released the home key, and didn't do anything else
             // while it was pressed, then it is time to go home!
@@ -2663,6 +2669,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
             return -1;
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
+		    lastMenuTime = System.currentTimeMillis();
+            if (lastHomeTime - lastBackTime > 0 && lastHomeTime - lastBackTime < 100 && lastMenuTime - lastHomeTime > 0 && lastMenuTime - lastHomeTime < 100) {
+                mPowerManager.goToSleep(SystemClock.uptimeMillis());
+            }
             // Hijack modified menu keys for debugging features
             final int chordBug = KeyEvent.META_SHIFT_ON;
 
@@ -2808,6 +2818,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
             return -1;
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+		    lastBackTime = System.currentTimeMillis();
+            if (lastHomeTime - lastMenuTime > 0 && lastHomeTime - lastMenuTime < 100 && lastBackTime - lastHomeTime > 0 && lastBackTime - lastHomeTime < 100) {
+                mPowerManager.goToSleep(SystemClock.uptimeMillis());
+            }
             if (Settings.Secure.getInt(mContext.getContentResolver(),
                     Settings.Secure.KILL_APP_LONGPRESS_BACK, 0) == 1) {
                 if (down && repeatCount == 0) {
