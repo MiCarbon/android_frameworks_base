@@ -25,6 +25,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioSystem;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -35,9 +36,12 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.ServiceManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.VolumePanel;
+import android.view.WindowManager;
 
 import java.util.HashMap;
 
@@ -56,6 +60,7 @@ public class AudioManager {
     private final Binder mToken = new Binder();
     private static String TAG = "AudioManager";
     private final ProfileManager mProfileManager;
+    private final WindowManager mWindowManager;
 
     /**
      * Broadcast intent, a hint for applications that audio is about to become
@@ -431,6 +436,7 @@ public class AudioManager {
         mUseVolumeKeySounds = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_useVolumeKeySounds);
         mProfileManager = (ProfileManager) context.getSystemService(Context.PROFILE_SERVICE);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     private static IAudioService getService()
@@ -481,21 +487,37 @@ public class AudioManager {
                  * Adjust the volume in on key down since it is more
                  * responsive to the user.
                  */
+                int direction;
+                if (shouldSuppressVolumeKey()) {
+                    direction = ADJUST_SAME;
+                } else {
+                    int swapKeys = Settings.System.getInt(mContext.getContentResolver(),
+                            Settings.System.SWAP_VOLUME_KEYS_ON_ROTATION, 0);
+                    int rotation = mWindowManager.getDefaultDisplay().getRotation();
+                    if (swapKeys == 1 // phone or hybrid
+                            && (rotation == Surface.ROTATION_90
+                            || rotation == Surface.ROTATION_180)) {
+                        direction = keyCode == KeyEvent.KEYCODE_VOLUME_UP
+                                ? ADJUST_LOWER
+                                : ADJUST_RAISE;
+                    } else if (swapKeys == 2 // tablet
+                            && (rotation == Surface.ROTATION_180
+                            || rotation == Surface.ROTATION_270)) {
+                        direction = keyCode == KeyEvent.KEYCODE_VOLUME_UP
+                                ? ADJUST_LOWER
+                                : ADJUST_RAISE;
+                    } else {
+                        direction = keyCode == KeyEvent.KEYCODE_VOLUME_UP
+                                ? ADJUST_RAISE
+                                : ADJUST_LOWER;
+                    }
+                }
                 int flags = FLAG_SHOW_UI | FLAG_VIBRATE;
 
                 if (mUseMasterVolume) {
-                    adjustMasterVolume(
-                            keyCode == KeyEvent.KEYCODE_VOLUME_UP
-                                    ? ADJUST_RAISE
-                                    : ADJUST_LOWER,
-                            flags);
+                    adjustMasterVolume(direction, flags);
                 } else {
-                    adjustSuggestedStreamVolume(
-                            keyCode == KeyEvent.KEYCODE_VOLUME_UP
-                                    ? ADJUST_RAISE
-                                    : ADJUST_LOWER,
-                            stream,
-                            flags);
+                    adjustSuggestedStreamVolume(direction, stream, flags);
                 }
                 break;
             case KeyEvent.KEYCODE_VOLUME_MUTE:
@@ -536,6 +558,42 @@ public class AudioManager {
                 mVolumeKeyUpTime = SystemClock.uptimeMillis();
                 break;
         }
+    }
+
+    private boolean shouldSuppressVolumeKey() {
+        boolean lockVolumeKeys = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.LOCK_VOLUME_KEYS, 0) == 1;
+
+        if (!lockVolumeKeys) {
+            /* don't suppress if the user doesn't want it */
+            return false;
+        }
+        if (getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+            /* only suppress in silent mode */
+            return false;
+        }
+        if (getMasterStreamType() != AudioManager.USE_DEFAULT_STREAM_TYPE &&
+                getMasterStreamType() != AudioManager.STREAM_RING) {
+            /* only suppress ringtone volume changes */
+            return false;
+        }
+        if (AudioSystem.getForceUse(AudioSystem.FOR_COMMUNICATION) == AudioSystem.FORCE_BT_SCO) {
+            /* don't suppress BT volume changes */
+            return false;
+        }
+        if (isMusicActive() || isSpeechRecognitionActive()) {
+            /* don't suppress music volume keys */
+            return false;
+        }
+        TelephonyManager mTelephonyManager = (TelephonyManager)
+                mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        if (AudioSystem.isStreamActive(AudioSystem.STREAM_VOICE_CALL, 0) ||
+                mTelephonyManager.getCallState() == TelephonyManager.CALL_STATE_OFFHOOK) {
+            /* don't suppress call volume changes */
+            return false;
+        }
+
+        return true;
     }
 
     /**

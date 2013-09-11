@@ -37,6 +37,7 @@ import com.android.internal.app.IMediaContainerService;
 import com.android.internal.app.ResolverActivity;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.content.PackageHelper;
+import com.android.internal.policy.impl.PhoneWindowManager;
 import com.android.internal.util.FastXmlSerializer;
 import com.android.internal.util.XmlUtils;
 import com.android.server.DeviceStorageMonitorService;
@@ -126,6 +127,7 @@ import android.util.SparseArray;
 import android.util.Xml;
 import android.view.Display;
 import android.view.WindowManager;
+import android.view.WindowManagerPolicy;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -529,6 +531,9 @@ public class PackageManagerService extends IPackageManager.Stub {
 
     // Stores a list of users whose package restrictions file needs to be updated
     private HashSet<Integer> mDirtyUsers = new HashSet<Integer>();
+
+    WindowManager mWindowManager;
+    private final WindowManagerPolicy mPolicy; // to set packageName
 
     final private DefaultContainerConnection mDefContainerConn =
             new DefaultContainerConnection();
@@ -1098,8 +1103,9 @@ public class PackageManagerService extends IPackageManager.Stub {
 
         mInstaller = installer;
 
-        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-        Display d = wm.getDefaultDisplay();
+        mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display d = mWindowManager.getDefaultDisplay();
+        mPolicy = new PhoneWindowManager();
         d.getMetrics(mMetrics);
 
         synchronized (mInstallLock) {
@@ -1416,6 +1422,21 @@ public class PackageManagerService extends IPackageManager.Stub {
             // we need to initialize the default preferred apps.
             if (!mRestoredSettings && !onlyCore) {
                 mSettings.readDefaultPreferredAppsLPw(this, 0);
+            }
+
+            // Disable components marked for disabling at build-time
+            for (String name : mContext.getResources().getStringArray(
+                    com.android.internal.R.array.config_disabledComponents)) {
+                ComponentName cn = ComponentName.unflattenFromString(name);
+                Slog.v(TAG, "Disabling " + name);
+                String className = cn.getClassName();
+                PackageSetting pkgSetting = mSettings.mPackages.get(cn.getPackageName());
+                if (pkgSetting == null || pkgSetting.pkg == null
+                        || !pkgSetting.pkg.hasComponentClassName(className)) {
+                    Slog.w(TAG, "Unable to disable " + name);
+                    continue;
+                }
+                pkgSetting.disableComponentLPw(className, UserHandle.USER_OWNER);
             }
 
             // can downgrade to reader
@@ -3661,9 +3682,18 @@ public class PackageManagerService extends IPackageManager.Stub {
         if (pkgs != null) {
             int i = 0;
             for (PackageParser.Package pkg : pkgs) {
+                PackageParser.Package p = pkg;
                 if (!isFirstBoot()) {
                     i++;
                     try {
+                        // give the packagename to the PhoneWindowManager
+                        ApplicationInfo ai;
+                        try {
+                            ai = mContext.getPackageManager().getApplicationInfo(p.packageName, 0);
+                        } catch (Exception e) {
+                            ai = null;
+                        }
+                        mPolicy.setPackageName((String) (ai != null ? mContext.getPackageManager().getApplicationLabel(ai) : p.packageName));
                         ActivityManagerNative.getDefault().showBootMessage(
                                 mContext.getResources().getString(
                                         com.android.internal.R.string.android_upgrading_apk,
@@ -3671,7 +3701,6 @@ public class PackageManagerService extends IPackageManager.Stub {
                     } catch (RemoteException e) {
                     }
                 }
-                PackageParser.Package p = pkg;
                 synchronized (mInstallLock) {
                     if (!p.mDidDexOpt) {
                         performDexOptLI(p, false, false, true);
