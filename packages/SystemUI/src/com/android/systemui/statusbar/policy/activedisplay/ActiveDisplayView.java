@@ -139,6 +139,7 @@ public class ActiveDisplayView extends FrameLayout {
     private LinearLayout.LayoutParams mOverflowLayoutParams;
     private KeyguardManager mKeyguardManager;
     private KeyguardLock mKeyguardLock;
+    private boolean mCallbacksRegistered = false;
 
     // user customizable settings
     private boolean mDisplayNotifications = false;
@@ -284,6 +285,9 @@ public class ActiveDisplayView extends FrameLayout {
         void unobserve() {
             ActiveDisplayView.this.mContext.getContentResolver()
                     .unregisterContentObserver(this);
+            if (mDisplayNotifications) {
+                unregisterCallbacks();
+            }
         }
 
         @Override
@@ -319,6 +323,12 @@ public class ActiveDisplayView extends FrameLayout {
 
             if (!mDisplayNotifications || mRedisplayTimeout <= 0) {
                 cancelRedisplayTimer();
+            }
+
+            if (mDisplayNotifications) {
+                registerCallbacks();
+            } else {
+                unregisterCallbacks();
             }
         }
     }
@@ -398,9 +408,6 @@ public class ActiveDisplayView extends FrameLayout {
 
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        registerNotificationListener();
-        registerSensorListener();
-        registerBroadcastReceiver();
         mSettingsObserver.observe();
         if (mRedisplayTimeout > 0 && !isScreenOn()) updateRedisplayTimer();
     }
@@ -408,9 +415,6 @@ public class ActiveDisplayView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        unregisterSensorListener();
-        unregisterNotificationListener();
-        unregisterBroadcastReceiver();
         mSettingsObserver.unobserve();
     }
 
@@ -520,7 +524,7 @@ public class ActiveDisplayView extends FrameLayout {
             storedDraw.add(new TargetDrawable(res, getLayeredDrawable(activeBack,
                     mNotificationDrawable, targetInset, false)));
             storedDraw.add(new TargetDrawable(res, null));
-            if (mNotification.isClearable()) {
+            if (mNotification != null && mNotification.isClearable()) {
                 storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_ad_dismiss_notification)));
             } else {
                 storedDraw.add(new TargetDrawable(res, null));
@@ -761,6 +765,24 @@ public class ActiveDisplayView extends FrameLayout {
             mSensorManager.unregisterListener(mSensorListener, mProximitySensor);
     }
 
+    private void registerCallbacks() {
+        if (!mCallbacksRegistered) {
+            registerBroadcastReceiver();
+            registerNotificationListener();
+            registerSensorListener();
+            mCallbacksRegistered = true;
+        }
+    }
+
+    private void unregisterCallbacks() {
+        if (mCallbacksRegistered) {
+            unregisterBroadcastReceiver();
+            unregisterNotificationListener();
+            unregisterSensorListener();
+            mCallbacksRegistered = false;
+        }
+    }
+
     private StatusBarNotification getNextAvailableNotification() {
         try {
             // check if other notifications exist and if so display the next one
@@ -815,6 +837,7 @@ public class ActiveDisplayView extends FrameLayout {
                     }
                 } catch (RemoteException re) {
                 } catch (NameNotFoundException nnfe) {
+                } catch (Resources.NotFoundException e) {
                 }
             }
         });
@@ -918,6 +941,7 @@ public class ActiveDisplayView extends FrameLayout {
             mNotificationDrawable = pkgContext.getResources().getDrawable(sbn.getNotification().icon);
             mCurrentNotificationIcon.setImageDrawable(mNotificationDrawable);
             setHandleText(sbn);
+            mNotification = sbn;
             mGlowPadView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -927,6 +951,7 @@ public class ActiveDisplayView extends FrameLayout {
                 }
             });
         } catch (NameNotFoundException e) {
+        } catch (Resources.NotFoundException e) {
         }
     }
 
