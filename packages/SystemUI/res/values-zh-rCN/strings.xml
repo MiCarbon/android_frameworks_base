@@ -220,10 +220,10 @@
     <string name="halo_dismiss">清除通知</string>
     <string name="halo_hide">隐藏</string>
     <string name="halo_clear_all">清除所有通知</string>
-    <string name="halo_silence">完全收起等待唤醒</string>
+    <string name="halo_silence">休眠并等待下一次通知</string>
     <string name="halo_tutorial1">我就是HALO</string>
-    <string name="halo_tutorial2">想给我挪个地方？双击我并进行拖动</string>
-    <string name="halo_tutorial3">浏览任务:左右滑动</string>
+    <string name="halo_tutorial2">想给我挪个地方？双击我并拖动</string>
+    <string name="halo_tutorial3">左右滑动可以浏览通知</string>
 	<!--  Quick Settings -->
     <string name="quick_settings_vibrate_on_label">已开启震动</string>
     <string name="quick_settings_vibrate_off_label">已关闭震动</string>
