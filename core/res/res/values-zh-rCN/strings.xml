@@ -1532,8 +1532,15 @@
     <!-- Reboot Confirmation Dialog.  When the user chooses to reboot the phone, there will be a confirmation dialog.  This is the message. -->
     <string name="reboot_confirm">您的手机将会重启.</string>
 
+    <!-- label for item that reboots the phone in phone options dialog -->
+    <string name="global_action_reboot">重新启动</string>
     <!-- label for item that opens the profile choosing dialog -->
     <string name="global_action_choose_profile">情景模式</string>
+
+    <!-- Button to reboot the phone to system0, within the Reboot Options dialog -->
+    <string name="reboot_system0">重启到系统一</string>
+    <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
+    <string name="reboot_system1">重启到系统二</string>
 
     <!-- Animation Strings -->
     <string name="animation_fade">淡入淡出</string>
