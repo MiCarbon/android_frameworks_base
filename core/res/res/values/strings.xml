@@ -4285,5 +4285,8 @@
     <!-- Hardware Rotation lock string -->
     <string name="toast_rotation_unlocked">Display rotation unlocked</string>
     <string name="toast_rotation_locked">Display rotation locked</string>
-
+    <!-- Button to reboot the phone to system0, within the Reboot Options dialog -->
+    <string name="reboot_system0">System1</string>
+    <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
+    <string name="reboot_system1">System2</string>
 </resources>
