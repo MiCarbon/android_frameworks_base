@@ -294,6 +294,8 @@
     <string name="permdesc_screenshot">截取屏幕</string>
     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permlab_screenshot">允许应用截取屏幕图片.这将由系统用户界面进行保护.</string>
-        <!-- Title shown in recents popup for showing app in floating mode -->
-    <string name="status_bar_recent_floating_item_title">在悬浮窗中显示此通知</string>
+    <!-- Title shown in recents popup for showing app in floating mode -->
+    <string name="status_bar_recent_floating_item_title">在悬浮窗中显示此应用</string>
+    <!-- Title shown in notification popup for launching notification in floating mode -->
+    <string name="status_bar_notification_floating_item_title">在悬浮窗中显示此通知</string>
 </resources>
