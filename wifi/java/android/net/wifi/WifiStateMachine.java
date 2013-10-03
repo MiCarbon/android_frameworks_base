@@ -103,7 +103,7 @@ public class WifiStateMachine extends StateMachine {
 
     private static final String NETWORKTYPE = "WIFI";
     private static final boolean DBG = false;
-
+    private static final String SOFTAP_IFACE = "wl0.1";
     private WifiMonitor mWifiMonitor;
     private WifiNative mWifiNative;
     private WifiConfigStore mWifiConfigStore;
@@ -1924,12 +1924,12 @@ public class WifiStateMachine extends StateMachine {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    mNwService.startAccessPoint(config, mInterfaceName);
+                    mNwService.startAccessPoint(config, mInterfaceName, SOFTAP_IFACE);
                 } catch (Exception e) {
                     loge("Exception in softap start " + e);
                     try {
                         mNwService.stopAccessPoint(mInterfaceName);
-                        mNwService.startAccessPoint(config, mInterfaceName);
+                        mNwService.startAccessPoint(config, mInterfaceName, SOFTAP_IFACE);
                     } catch (Exception e1) {
                         loge("Exception in softap re-start " + e1);
                         sendMessage(CMD_START_AP_FAILURE);
