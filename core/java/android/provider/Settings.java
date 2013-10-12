@@ -2988,10 +2988,16 @@ public final class Settings {
         public static final String STATUS_BAR_BATTERY = "status_bar_battery";
 		
         /**
-         * Network speed indicator
+         * Whether to show the network status in the status bar
          * @hide
          */
-        public static final String STATUS_BAR_TRAFFIC = "status_bar_traffic";
+        public static final String STATUS_BAR_NETWORK_STATS = "status_bar_network_stats";
+
+        /**
+         * Frequency at which stats are updated, in milliseconds
+         * @hide
+         */
+        public static final String STATUS_BAR_NETWORK_STATS_UPDATE_INTERVAL = "status_bar_network_stats_update_frequency";
 
 	/**
          * HALO enabled, should default to 0 (HALO is disabled)
@@ -3378,6 +3384,12 @@ public final class Settings {
          * @hide
          */
         public static final String EXPANDED_DESKTOP_MODE = "expanded_desktop_mode";
+
+        /**
+        * Whether fcharge is enabled or not if kernel supports it
+        * @hide
+        */
+        public static final String FCHARGE_ENABLED = "fcharge_enabled";
 
         /**
          * Quick Settings Disable Panel
