@@ -243,8 +243,6 @@
     <string name="quick_settings_wifi_tether_off_label">Wifi热点关闭</string>
     <string name="quick_settings_bt_tether_on_label">蓝牙热点开启</string>
     <string name="quick_settings_bt_tether_off_label">蓝牙热点关闭</string>
-    <string name="quick_settings_usb_tether_on_label">USB共享已开启</string>
-    <string name="quick_settings_usb_tether_off_label">USB共享已关闭</string>
     <string name="quick_settings_sync_on_label">同步已开启</string>
     <string name="quick_settings_sync_off_label">同步已关闭</string>
     <string name="quick_settings_network_type">网络模式</string>
