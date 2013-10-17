@@ -3128,6 +3128,12 @@ public final class Settings {
          */
         public static final String HALO_CIRCLE_COLOR = "halo_circle_color";
 
+	/**
+         * Do you want popups/floating windows?
+         * @hide
+         */
+        public static final String WE_WANT_POPUPS = "we_want_popups";
+
         /**
          * Pie menu, should default to 0 (no, show only when needed)
          * Restart Launcher
@@ -3622,6 +3628,12 @@ public final class Settings {
          * @hide
          */
         public static final String MVNO_ROAMING = "mvno_roaming";
+
+        /**
+         * Whether or not to show circle battery around the lockscreen ring
+         * @hide
+         */
+        public static final String BATTERY_AROUND_LOCKSCREEN_RING = "battery_around_lockscreen_ring";
 
         /**
          * Whether electronic beam animation is enabled or not
