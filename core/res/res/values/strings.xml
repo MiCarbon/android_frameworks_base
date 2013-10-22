@@ -4306,6 +4306,7 @@
     <!-- Hardware Rotation lock string -->
     <string name="toast_rotation_unlocked">Display rotation unlocked</string>
     <string name="toast_rotation_locked">Display rotation locked</string>
+
     <!-- Button to reboot the phone to system0, within the Reboot Options dialog -->
     <string name="reboot_system0">System1</string>
     <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
@@ -4320,4 +4321,8 @@
     <string name="status_format1"  translatable="false">yyyy年MM月dd日</string>
     <string name="status_format2"  translatable="false">1900年1月31日</string>
     <!-- MoKee Lunar End -->   
+
+    <!-- Description of the Random button in a KeyboardView. [CHAR LIMIT=NONE] -->
+    <string name="keyboardview_keycode_random">Reload random buttons</string>
+    
 </resources>
