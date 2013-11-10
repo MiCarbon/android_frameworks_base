@@ -29,7 +29,7 @@
         android:layout_height="140dp"
         android:background="@drawable/cr_no_recents"
         android:textSize="20dp"
-        android:textColor="@android:color/holo_blue_light"
+        android:textColor="@android:color/white"
         android:text="@string/status_bar_no_recent_apps"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
