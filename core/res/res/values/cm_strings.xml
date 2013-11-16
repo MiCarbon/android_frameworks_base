@@ -181,4 +181,9 @@
     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permdesc_cancelNotifications">Allows the app to cancel notifications created by other apps.</string>
 
+    <!-- Button to reboot the phone to system0, within the Reboot Options dialog -->
+    <string name="reboot_system0">Reboot to System0</string>
+    <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
+    <string name="reboot_system1">Reboot to System1</string>
+
 </resources>

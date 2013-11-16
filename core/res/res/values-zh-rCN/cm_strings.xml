@@ -72,4 +72,8 @@
     <string name="policydesc_enforceSelinux">切换 SELinux 策略为强制执行或许可模式.</string>
     <string name="policylab_enforceMmac">强制执行 MMAC</string>
     <string name="policydesc_enforceMmac">切换 MMAC 策略为强制执行或许可模式.</string>
+    <!-- Button to reboot the phone to system0, within the Reboot Options dialog -->
+    <string name="reboot_system0">重启到系统一</string>
+    <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
+    <string name="reboot_system1">重启到系统二</string>
 </resources>
