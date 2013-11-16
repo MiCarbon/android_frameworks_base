@@ -51,7 +51,6 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.SystemService;
 import android.os.UserHandle;
 import android.os.WorkSource;
@@ -395,6 +394,8 @@ public final class PowerManagerService extends IPowerManager.Stub
     private long mLastWarningAboutUserActivityPermission = Long.MIN_VALUE;
 
     private native void nativeInit();
+    private static native void nativeShutdown();
+    private static native void nativeReboot(String reason) throws IOException;
 
     private static native void nativeSetPowerState(boolean screenOn, boolean screenBright);
     private static native void nativeAcquireSuspendBlocker(String name);
@@ -2384,26 +2385,18 @@ public final class PowerManagerService extends IPowerManager.Stub
      * to be clean.  Most people should use {@link ShutdownThread} for a clean shutdown.
      */
     public static void lowLevelShutdown() {
-        SystemProperties.set("sys.powerctl", "shutdown");
+        nativeShutdown();
     }
 
     /**
-     * Low-level function to reboot the device. On success, this function
-     * doesn't return. If more than 5 seconds passes from the time,
-     * a reboot is requested, this method returns.
+     * Low-level function to reboot the device.
      *
      * @param reason code to pass to the kernel (e.g. "recovery"), or null.
+     * @throws IOException if reboot fails for some reason (eg, lack of
+     *         permission)
      */
-    public static void lowLevelReboot(String reason) {
-        if (reason == null) {
-            reason = "";
-        }
-        SystemProperties.set("sys.powerctl", "reboot," + reason);
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    public static void lowLevelReboot(String reason) throws IOException {
+        nativeReboot(reason);
     }
 
     @Override // Watchdog.Monitor implementation

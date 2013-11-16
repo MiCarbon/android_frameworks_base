@@ -33,6 +33,7 @@
 #include <utils/Log.h>
 #include <hardware/power.h>
 #include <hardware_legacy/power.h>
+#include <cutils/android_reboot.h>
 #include <suspend/autosuspend.h>
 
 #include "com_android_server_power_PowerManagerService.h"
@@ -189,12 +190,55 @@ static void nativeSetAutoSuspend(JNIEnv *env, jclass clazz, jboolean enable) {
     }
 }
 
+
 static void nativeCpuBoost(JNIEnv *env, jobject clazz, jint duration) {
     // Tell the Power HAL to boost the CPU
     if (gPowerModule && gPowerModule->powerHint) {
         gPowerModule->powerHint(gPowerModule, POWER_HINT_CPU_BOOST, (void *) duration);
     }
 }
+
+static void nativeShutdown(JNIEnv *env, jclass clazz) {
+    android_reboot(ANDROID_RB_POWEROFF, 0, 0);
+}
+int setbootmode(char* bootmode) {
+    // open misc-partition
+    FILE* misc = fopen("/dev/block/platform/msm_sdcc.1/by-name/misc", "wb");
+    if (misc == NULL) {
+       printf("Error opening misc partition.\n");
+       return -1;
+    }
+ 
+    // write bootmode
+    fseek(misc, 0x1000, SEEK_SET);
+    if(fputs(bootmode, misc)<0) {
+       printf("Error writing bootmode to misc partition.\n");
+       return -1;
+    }
+ 
+    // close
+    fclose(misc);
+    return 0;
+ }
+
+
+ static void nativeReboot(JNIEnv *env, jclass clazz, jstring reason) {
+      if (reason == NULL) {
+          android_reboot(ANDROID_RB_RESTART, 0, 0);
+      } else {
+          const char *chars = env->GetStringUTFChars(reason, NULL);
+         if (strcmp(chars, "system0") == 0) {
+             setbootmode("boot-system0");
+             android_reboot(ANDROID_RB_RESTART, 0, 0);
+         } else if (strcmp(chars, "system1") == 0) {
+             setbootmode("boot-system1");
+             android_reboot(ANDROID_RB_RESTART, 0, 0);
+         } else {
+             android_reboot(ANDROID_RB_RESTART2, 0, (char *) chars);
+         }
+          env->ReleaseStringUTFChars(reason, chars);  // In case it fails.
+      }
+      jniThrowIOException(env, errno);
 
 // ----------------------------------------------------------------------------
 
@@ -212,8 +256,15 @@ static JNINativeMethod gPowerManagerServiceMethods[] = {
             (void*) nativeSetInteractive },
     { "nativeSetAutoSuspend", "(Z)V",
             (void*) nativeSetAutoSuspend },
+<<<<<<< HEAD
     { "nativeCpuBoost", "(I)V",
             (void*) nativeCpuBoost },
+=======
+    { "nativeShutdown", "()V",
+            (void*) nativeShutdown },
+    { "nativeReboot", "(Ljava/lang/String;)V",
+            (void*) nativeReboot },
+>>>>>>> parent of dbcf2d7... PowerManagerService: Don't reboot directly.
 };
 
 #define FIND_CLASS(var, className) \
