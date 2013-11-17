@@ -62,6 +62,7 @@ import android.util.TimeUtils;
 import android.view.WindowManagerPolicy;
 
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 

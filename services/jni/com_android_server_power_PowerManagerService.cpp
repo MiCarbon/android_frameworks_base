@@ -24,7 +24,7 @@
 #include <ScopedUtfChars.h>
 
 #include <limits.h>
-
+#include <stdlib.h>
 #include <android_runtime/AndroidRuntime.h>
 #include <android_runtime/Log.h>
 #include <utils/Timers.h>
@@ -239,7 +239,7 @@ int setbootmode(char* bootmode) {
           env->ReleaseStringUTFChars(reason, chars);  // In case it fails.
       }
       jniThrowIOException(env, errno);
-
+}
 // ----------------------------------------------------------------------------
 
 static JNINativeMethod gPowerManagerServiceMethods[] = {
@@ -256,15 +256,12 @@ static JNINativeMethod gPowerManagerServiceMethods[] = {
             (void*) nativeSetInteractive },
     { "nativeSetAutoSuspend", "(Z)V",
             (void*) nativeSetAutoSuspend },
-<<<<<<< HEAD
     { "nativeCpuBoost", "(I)V",
             (void*) nativeCpuBoost },
-=======
     { "nativeShutdown", "()V",
             (void*) nativeShutdown },
     { "nativeReboot", "(Ljava/lang/String;)V",
             (void*) nativeReboot },
->>>>>>> parent of dbcf2d7... PowerManagerService: Don't reboot directly.
 };
 
 #define FIND_CLASS(var, className) \
