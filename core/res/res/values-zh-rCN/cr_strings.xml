@@ -28,9 +28,6 @@
     <string name="reboot_system" product="tablet">重启平板</string>
     <string name="reboot_system" product="default">重启手机</string>
     <string name="global_action_screenshot">屏幕截图</string>
-    <string name="global_actions_toggle_expanded_desktop_mode">扩展桌面</string>
-    <string name="global_actions_expanded_desktop_mode_on_status">已启用</string>
-    <string name="global_actions_expanded_desktop_mode_off_status">已禁用</string>
     <string name="reboot_reboot">重新启动</string>
     <string name="reboot_recovery">恢复模式</string>
     <string name="reboot_bootloader">引导程序</string>
@@ -76,4 +73,10 @@
     <string name="reboot_system0">重启到系统一</string>
     <!-- Button to reboot the phone to system1, within the Reboot Options dialog -->
     <string name="reboot_system1">重启到系统二</string>
+    <!-- label for item that toggles immersive mode -->
+    <string name="global_actions_toggle_immersive_mode">沉浸模式</string>
+    <!-- status message in phone options dialog for when immersive mode is on -->
+    <string name="global_actions_immersive_mode_on_status">已开启</string>
+    <!-- status message in phone options dialog for when immersive mode is off -->
+    <string name="global_actions_immersive_mode_off_status">已关闭</string>
 </resources>
