@@ -182,10 +182,11 @@ public class NotificationViewManager {
         @Override
         public void onNotificationPosted(final StatusBarNotification sbn) {
             boolean screenOffAndNotCovered = !mIsScreenOn && mTimeCovered == 0;
-            boolean ongoingAndReposted = sbn.isOngoing() && mHostView.containsNotification(sbn);
-            if (mHostView.addNotification(sbn, (screenOffAndNotCovered || mIsScreenOn) && !ongoingAndReposted,
-                        config.forceExpandedView) && config.wakeOnNotification && screenOffAndNotCovered
-                        && !ongoingAndReposted && mTimeCovered == 0) {
+            boolean showNotification = !mHostView.containsNotification(sbn) || mHostView.getNotification(sbn).when != sbn.getNotification().when;
+            boolean added = mHostView.addNotification(sbn, (screenOffAndNotCovered || mIsScreenOn) && showNotification,
+                    config.forceExpandedView);
+            if ( added && config.wakeOnNotification && screenOffAndNotCovered
+                        && showNotification && mTimeCovered == 0) {
                 wakeDevice();
             }
         }

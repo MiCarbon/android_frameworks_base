@@ -146,7 +146,7 @@ public class StatusBarManagerService extends IStatusBarService.Stub
 
         if (mBar != null) {
             try {
-                mBar.animateExpandSettingsPanel();
+                mBar.animateExpandSettingsPanel(true);
             } catch (RemoteException ex) {
             }
         }
@@ -261,7 +261,7 @@ public class StatusBarManagerService extends IStatusBarService.Stub
         }
     }
 
-    /** 
+    /**
      * Hide or show the on-screen Menu key. Only call this from the window manager, typically in
      * response to a window with FLAG_NEEDS_MENU_KEY set.
      */
@@ -404,6 +404,51 @@ public class StatusBarManagerService extends IStatusBarService.Stub
         if (mBar != null) {
             try {
                 mBar.setWindowState(window, state);
+            } catch (RemoteException ex) {}
+        }
+    }
+
+    @Override
+    public void toggleNotificationShade() {
+        if (mBar != null) {
+            try {
+                mBar.toggleNotificationShade();
+            } catch (RemoteException ex) {}
+        }
+    }
+
+    @Override
+    public void toggleQSShade() {
+        if (mBar != null) {
+            try {
+                mBar.toggleQSShade();
+            } catch (RemoteException ex) {}
+        }
+    }
+
+    @Override
+    public void toggleScreenshot() {
+        if (mBar != null) {
+            try {
+                mBar.toggleScreenshot();
+            } catch (RemoteException ex) {}
+        }
+    }
+
+    @Override
+    public void toggleLastApp() {
+        if (mBar != null) {
+            try {
+                mBar.toggleLastApp();
+            } catch (RemoteException ex) {}
+        }
+    }
+
+    @Override
+    public void toggleKillApp() {
+        if (mBar != null) {
+            try {
+                mBar.toggleKillApp();
             } catch (RemoteException ex) {}
         }
     }

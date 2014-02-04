@@ -472,6 +472,7 @@ public class BatteryMeterView extends View implements DemoMode {
                 }
                 lp = new LinearLayout.LayoutParams((int) width, (int) height);
                 lp.setMarginStart((int) (metrics.density * 6f + 0.5f));
+                lp.setMargins(0, 0, 0, (int) (metrics.density * 0.5f + 0.5f));
                 setLayoutParams(lp);
             } else if (mBatteryTypeView.equals("quicksettings")) {
                 height = metrics.density * 32f + 0.5f;
@@ -514,17 +515,17 @@ public class BatteryMeterView extends View implements DemoMode {
 
         if (tracker.level <= 14 && !tracker.plugged) {
             mBatteryPaint.setColor(Color.RED);
+        } else if (mCustomColor) {
+            mBatteryPaint.setColor(DevUtils.extractRGB(systemColor) | OPAQUE_MASK);
+            mFramePaint.setColor(DevUtils.extractRGB(systemColor) | FRAME_MASK);
         } else if (mBatteryColor == -2) {
             mBatteryPaint.setColor(mContext.getResources().getColor(
                     R.color.batterymeter_charge_color));
+            mFramePaint.setColor(mContext.getResources().getColor(
+                    R.color.batterymeter_frame_color));
         } else {
-            if (mCustomColor) {
-                mBatteryPaint.setColor(DevUtils.extractRGB(systemColor) | OPAQUE_MASK);
-                mFramePaint.setColor(DevUtils.extractRGB(systemColor) | FRAME_MASK);
-            } else {
-                mBatteryPaint.setColor(DevUtils.extractRGB(mBatteryColor) | OPAQUE_MASK);
-                mFramePaint.setColor(DevUtils.extractRGB(mBatteryColor) | FRAME_MASK);
-            }
+            mBatteryPaint.setColor(DevUtils.extractRGB(mBatteryColor) | OPAQUE_MASK);
+            mFramePaint.setColor(DevUtils.extractRGB(mBatteryColor) | FRAME_MASK);
         }
 
         if (tracker.plugged) {
