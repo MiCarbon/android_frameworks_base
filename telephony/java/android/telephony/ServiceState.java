@@ -183,7 +183,7 @@ public class ServiceState implements Parcelable {
     private int mSystemId;
     private int mCdmaRoamingIndicator;
     private int mCdmaDefaultRoamingIndicator;
-    private int mCdmaEriIconIndex = 1; //EriInfo.ROAMING_INDICATOR_OFF;
+    private int mCdmaEriIconIndex;
     private int mCdmaEriIconMode;
 
     /**
@@ -801,8 +801,6 @@ public class ServiceState implements Parcelable {
         case ServiceState.RIL_RADIO_TECHNOLOGY_HSPAP:
         case ServiceState.RIL_RADIO_TECHNOLOGY_DCHSPAP:
             return TelephonyManager.NETWORK_TYPE_HSPAP;
-        case ServiceState.RIL_RADIO_TECHNOLOGY_GSM:
-            return TelephonyManager.NETWORK_TYPE_GSM;
         default:
             return TelephonyManager.NETWORK_TYPE_UNKNOWN;
         }
