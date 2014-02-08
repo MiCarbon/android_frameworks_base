@@ -212,11 +212,6 @@ public interface TelephonyProperties
      */
     static final String PROPERTY_ALPHA_USRCNF = "persist.atel.noalpha.usrcnf";
 
-    /**
-     * Ignore RIL_UNSOL_NITZ_TIME_RECEIVED completely, used for debugging/testing.
-     */   
-    static final String PROPERTY_IGNORE_NITZ = "telephony.test.ignore.nitz";
-
      /**
      * Property to set multi sim feature.
      * Type:  String(dsds, dsda)
